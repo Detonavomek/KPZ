@@ -13,17 +13,14 @@ def GetCourtMeeting():
 
 def AddCourt(courtName):
 	DB.session.add(DB.Court(name = courtName))
-	DB.session_commit()
 	res = DB.session.query(DB.Court).order_by(DB.Court.court_id.desc()).filter().all()
 	return res[0].court_id
 def AddRemoval(removalReason):
 	DB.session.add(DB.Removal(reason = removalReason))
-	DB.session_commit()
 	res = DB.session.query(DB.Removal).order_by(DB.Removal.removal_id.desc()).filter().all()
 	return res[0].removal_id
 def AddCourtMeeting(gcourt_id,gremoval_id,gnumber_case,gdate_meeting,gpunishment):
 	DB.session.add(DB.CourtMeeting(court_id=gcourt_id,removal_id=gremoval_id,number_case=gnumber_case,date_meeting=gdate_meeting,punishment=gpunishment))
-	DB.session_commit()
 
 def DeleteCourtMeeting(cm_id):
 	DB.session.query(DB.CourtMeeting).filter(DB.CourtMeeting.court_meeting_id == cm_id).delete()
@@ -41,6 +38,7 @@ def AllAddCourtMeeting(number_case, date_meeting, punishment, isNewCourt, courtI
 	else:
 		gremoval_id = AddRemoval(reason)
 	AddCourtMeeting(gcourt_id,gremoval_id,number_case,date_meeting,punishment)
+	DB.session_commit()
 
 # r = GetCourtMeeting()
 # for rs in r:

@@ -5,7 +5,7 @@ import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import mapper, sessionmaker
 
-db = create_engine('mysql+mysqldb:///reg?charset=utf8')
+db = create_engine('mysql+mysqldb:///register?charset=utf8')
 db.echo = False
 metadata = MetaData(db)
 Session = sessionmaker(bind=db)

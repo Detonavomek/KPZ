@@ -25,5 +25,6 @@ def postCourtMeetingWork():
 	else:
 		for l in request.body:
 			Controler.DeleteCourtMeeting(l.split('&')[1].split('=')[0])
+	run(reloader=True)
 
 run(host='localhost', port=8082, debug=True)

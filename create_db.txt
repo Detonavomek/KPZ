@@ -1,0 +1,63 @@
+DROP DATABASE register;
+CREATE DATABASE register;
+USE register;
+CREATE TABLE court(court_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));
+CREATE TABLE removal(removal_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, reason VARCHAR(255));
+CREATE TABLE court_meeting(court_meeting_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,court_id INT, removal_id INT, number_case VARCHAR(32), date_meeting TIMESTAMP DEFAULT CURRENT_TIMESTAMP, punishment VARCHAR(255),
+	CONSTRAINT FOREIGN KEY (court_id) REFERENCES court(court_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT FOREIGN KEY (removal_id) REFERENCES removal(removal_id) ON DELETE CASCADE ON UPDATE CASCADE);
+CREATE TABLE violance(violance_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, date_do TIMESTAMP DEFAULT CURRENT_TIMESTAMP, constitution_article VARCHAR(64), struct VARCHAR(255), charact VARCHAR(255), date_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE disciplinary_action(disciplinary_action_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,stage_property VARCHAR(255), way VARCHAR(255), type VARCHAR(255), reason VARCHAR(255), date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, note VARCHAR(255));
+CREATE TABLE people(people_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), surname VARCHAR(255), second_name VARCHAR(255), birthday TIMESTAMP DEFAULT CURRENT_TIMESTAMP, birth_place VARCHAR(255), passport_series VARCHAR(4), passport_number VARCHAR(8), inn_code VARCHAR(16), work_place VARCHAR(255));
+CREATE TABLE registrator(registrator_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));
+CREATE TABLE statements_types(statements_types_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));
+CREATE TABLE register(register_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, people_id INT, violance_id INT, court_meeting_id INT, disciplinary_action_id INT, registrator_id INT, 
+	CONSTRAINT FOREIGN KEY (people_id) REFERENCES people(people_id) ON DELETE CASCADE ON UPDATE CASCADE, 
+	CONSTRAINT FOREIGN KEY (violance_id) REFERENCES violance(violance_id) ON DELETE CASCADE ON UPDATE CASCADE, 
+	CONSTRAINT FOREIGN KEY (court_meeting_id) REFERENCES court_meeting(court_meeting_id) ON DELETE CASCADE ON UPDATE CASCADE, 
+	CONSTRAINT FOREIGN KEY (disciplinary_action_id) REFERENCES disciplinary_action(disciplinary_action_id) ON DELETE CASCADE ON UPDATE CASCADE, 
+	CONSTRAINT FOREIGN KEY (registrator_id) REFERENCES registrator(registrator_id) ON DELETE CASCADE ON UPDATE CASCADE);
+CREATE TABLE statements(statements_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, statements_types_id INT, registrator_id INT, register_id INT, fullname_plaintiff VARCHAR(255), date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, note VARCHAR(255),
+	CONSTRAINT FOREIGN KEY (statements_types_id) REFERENCES statements_types(statements_types_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT FOREIGN KEY (registrator_id) REFERENCES registrator(registrator_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT FOREIGN KEY (register_id) REFERENCES register(register_id) ON DELETE CASCADE ON UPDATE CASCADE);
+
+INSERT INTO court(name) VALUES('Court 1');
+INSERT INTO court(name) VALUES('Court 2');
+INSERT INTO court(name) VALUES('Court 3');
+INSERT INTO removal(reason) VALUES('Removal reason 1');
+INSERT INTO removal(reason) VALUES('Removal reason 2');
+INSERT INTO removal(reason) VALUES('Removal reason 3');
+INSERT INTO court_meeting(court_id, removal_id, number_case, date_meeting, punishment) VALUES(1,1,'000001','2008-06-11 16:15:30', 'Punishment 1');
+INSERT INTO court_meeting(court_id, removal_id, number_case, date_meeting, punishment) VALUES(1,2,'000002','2008-06-12 16:15:30', 'Punishment 2');
+INSERT INTO court_meeting(court_id, removal_id, number_case, date_meeting, punishment) VALUES(2,1,'000003','2008-06-13 16:15:30', 'Punishment 3');
+INSERT INTO court_meeting(court_id, removal_id, number_case, date_meeting, punishment) VALUES(2,3,'000004','2008-06-14 16:15:30', 'Punishment 4');
+INSERT INTO court_meeting(court_id, removal_id, number_case, date_meeting, punishment) VALUES(3,3,'000005','2008-06-15 16:15:30', 'Punishment 5');
+INSERT INTO disciplinary_action(stage_property, way, type, reason, date, note) VALUES('Stage property 1', 'Way 1', 'Type 1', 'Reason 1', '2008-06-11 19:15:30', 'Note 1');
+INSERT INTO disciplinary_action(stage_property, way, type, reason, date, note) VALUES('Stage property 2', 'Way 2', 'Type 2', 'Reason 2', '2008-06-12 19:15:30', 'Note 2');
+INSERT INTO disciplinary_action(stage_property, way, type, reason, date, note) VALUES('Stage property 3', 'Way 3', 'Type 3', 'Reason 3', '2008-06-13 19:15:30', 'Note 3');
+INSERT INTO people(name, surname, second_name, birthday, birth_place, passport_series, passport_number, inn_code, work_place) VALUES('Name 1', 'Surname 1', 'Second name 1', '1978-06-11 19:15:30', 'Birth place 1', 'PA', '100001', '20000001', 'Work place 1');
+INSERT INTO people(name, surname, second_name, birthday, birth_place, passport_series, passport_number, inn_code, work_place) VALUES('Name 2', 'Surname 2', 'Second name 2', '1978-06-12 19:15:30', 'Birth place 2', 'PB', '100002', '20000002', 'Work place 2');
+INSERT INTO people(name, surname, second_name, birthday, birth_place, passport_series, passport_number, inn_code, work_place) VALUES('Name 3', 'Surname 3', 'Second name 3', '1978-06-13 19:15:30', 'Birth place 3', 'PC', '100003', '20000003', 'Work place 3');
+INSERT INTO violance(date_do, constitution_article, struct, charact, date_start) VALUES('2008-06-01 19:15:30', 'Const art 1', 'Struct 1', 'Character 1', '2008-06-05 19:15:30');
+INSERT INTO violance(date_do, constitution_article, struct, charact, date_start) VALUES('2008-06-02 19:15:30', 'Const art 2', 'Struct 2', 'Character 2', '2008-06-06 19:15:30');
+INSERT INTO violance(date_do, constitution_article, struct, charact, date_start) VALUES('2008-06-03 19:15:30', 'Const art 3', 'Struct 3', 'Character 3', '2008-06-07 19:15:30');
+INSERT INTO registrator(name) VALUES('Registrator 1');
+INSERT INTO registrator(name) VALUES('Registrator 2');
+INSERT INTO registrator(name) VALUES('Registrator 3');
+INSERT INTO statements_types(name) VALUES('Statement type 1');
+INSERT INTO statements_types(name) VALUES('Statement type 2');
+INSERT INTO statements_types(name) VALUES('Statement type 3');
+INSERT INTO register(people_id, violance_id, court_meeting_id, disciplinary_action_id, registrator_id) VALUES(1,1,1,1,1);
+INSERT INTO register(people_id, violance_id, court_meeting_id, disciplinary_action_id, registrator_id) VALUES(2,2,2,2,1);
+INSERT INTO register(people_id, violance_id, court_meeting_id, disciplinary_action_id, registrator_id) VALUES(1,3,3,NULL,2);
+INSERT INTO register(people_id, violance_id, court_meeting_id, disciplinary_action_id, registrator_id) VALUES(2,3,4,NULL,2);
+INSERT INTO register(people_id, violance_id, court_meeting_id, disciplinary_action_id, registrator_id) VALUES(3,3,5,3,3);
+INSERT INTO statements(statements_types_id, registrator_id, register_id, fullname_plaintiff, date, note) VALUES(1,1,1,'Fullname plantiff 1', '2008-07-11 19:15:30', 'Note 1');
+INSERT INTO statements(statements_types_id, registrator_id, register_id, fullname_plaintiff, date, note) VALUES(1,1,2,'Fullname plantiff 2', '2008-07-12 19:15:30', 'Note 2');
+INSERT INTO statements(statements_types_id, registrator_id, register_id, fullname_plaintiff, date, note) VALUES(2,1,2,'Fullname plantiff 3', '2008-07-13 19:15:30', 'Note 3');
+INSERT INTO statements(statements_types_id, registrator_id, register_id, fullname_plaintiff, date, note) VALUES(3,1,2,'Fullname plantiff 4', '2008-07-14 19:15:30', 'Note 4');
+INSERT INTO statements(statements_types_id, registrator_id, register_id, fullname_plaintiff, date, note) VALUES(2,2,3,'Fullname plantiff 5', '2008-07-15 19:15:30', 'Note 5');
+
+SELECT name, surname FROM people JOIN register ON register.people_id=people.people_id JOIN violance ON register.violance_id = violance.violance_id WHERE violance.struct = 'Struct 3';
+SELECT constitution_article FROM violance JOIN register ON register.violance_id=violance.violance_id JOIN statements ON statements.register_id=register.register_id JOIN statements_types ON statements_types.statements_types_id=statements.statements_types_id WHERE statements_types.name='Statement type 2';
