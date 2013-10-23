@@ -1,0 +1,177 @@
+<html>
+<head>
+</head>
+<body>
+	<table>
+		<tr>
+			<td COLSPAN='3'>
+				<form action="court" method="post" target="_blank">
+					Add court removal:</br>
+					<input type="checkbox" name="checkNewCourt" id="checkNewCourt">New court?</input>
+					<div id="courtsList">
+						<select name='selectCourt' id='selectCourt'>{% for court in courts %}
+							<option id = 'id{{court.court_id|e}}'>{{court.name|e}}</option>{% endfor %}
+						</select>
+					</div>
+					<div id="courtForm" style="display: none"></div>
+					<input type="checkbox" name="checkNewRemoval" id="checkNewRemoval">New removal?</input>
+					<div id="removalsList">
+						<select name='selectRemoval' id='selectRemoval'>{% for removal in removals %}
+							<option id = 'id{{removal.removal_id|e}}'>{{removal.reason|e}}</option>{% endfor %}
+						</select>
+					</div>
+					<div id="removalForm" style="display: none"></div>
+					<input type="text" name="number_case" value = 'Enter number case'/>
+					<input type="date" name="date_meeting" value='1000-10-10 10:10:10'/>
+					<input type="text" name="punishment" value='Enter punishment'/>
+					<input type="submit" value = 'Add' >
+					<div name="postData" id="postData" style="display: none">
+						<input type="text" name='isNewCourt' id='isNewCourt' value='0'/>
+						<input type="text" name='isNewRemoval' id='isNewRemoval' value='0'/>
+						<input type="text" name='courtId' id='courtId' value='0'/>
+						<input type="text" name='removalId' id='removalId' value='0'/>
+						<input type="text" name='checkForm' value='addCourtMeeting'/>
+						</div>
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td valign="baseline">
+				<p>Courts:</p>
+				<table border="1">
+					<th>id</th>
+					<th>name</th>{% for court in courts %}
+					<tr>
+						<td>{{court.court_id|e}}</td>
+						<td>{{court.name|e}}</td>
+					</tr>{% endfor %}
+				</table>
+			</td>
+			<td valign="baseline">
+				<p>Removals:</p>
+				<table border="1">
+					<th>id</th>
+					<th>reason</th>{% for removal in removals %}
+					<tr>
+						<td>{{removal.removal_id|e}}</td>
+						<td>{{removal.reason|e}}</td>
+					</tr>{% endfor %}
+				</table>
+			</td>
+			<td valign="baseline">
+				<p>Court meetings:</p>
+				<table border="1">
+					<th>id</th>
+					<th>Court</th>
+					<th>Removal</th>
+					<th>Number case</th>
+					<th>Date meeting</th>
+					<th>Punishment</th>
+					<th>Delete</th>{% for cm in court_meeting %}
+					<tr>
+						<td>{{cm.CourtMeeting.court_meeting_id|e}}</td>
+						<td>{{cm.Court.name|e}}</td>
+						<td>{{cm.Removal.reason|e}}</td>
+						<td>{{cm.CourtMeeting.number_case|e}}</td>
+						<td>{{cm.CourtMeeting.date_meeting|e}}</td>
+						<td>{{cm.CourtMeeting.punishment|e}}</td>
+						<td><form action="court" method="post" target="_blank"><div style="display: none"><input name='checkForm' value='deleteCourtMeeting'/></div><input type="submit" name ='{{cm.CourtMeeting.court_meeting_id|e}}' value = 'Delete' /></form></td>
+					</tr>{% endfor %}
+				</table>
+			</td>
+		</tr>
+	</table>
+	<script>
+	var App = {
+		checkbox: document.getElementById('checkNewCourt'),
+   		courtForm: document.getElementById('courtForm'),
+   		courtsList: document.getElementById('courtsList'),
+   		isNewCourt: document.getElementById('isNewCourt'),
+   		courtId: document.getElementById('courtId'),
+   		selectCourt: document.getElementById('selectCourt'),
+
+		newCourt: function() {
+			var name = document.createElement('input');
+			name.id = 'name'
+			name.name = 'name'
+			name.type = 'text';
+			name.value = 'Enter court name';
+			this.courtForm.appendChild(name);
+		},
+
+		toggleCourtForm: function() {
+			if(this.courtForm.style.display == 'block') {
+				this.courtForm.style.display = 'none';
+				this.courtsList.style.display = 'block';
+				this.isNewCourt.value = '0';
+			} else {
+				this.courtForm.style.display = 'block';
+				this.courtsList.style.display = 'none';
+				this.isNewCourt.value = '1';
+			}
+		},
+
+		onSelectChanged: function() {
+			this.courtId.value = this.selectCourt.options[this.selectCourt.options.selectedIndex].id.substr(2);
+		},
+	};
+
+	App.newCourt();
+	App.onSelectChanged();
+	
+	App.checkbox.addEventListener('click', function(){
+		App.toggleCourtForm();
+	});
+
+	App.selectCourt.onchange = function(){
+		App.onSelectChanged();
+	};
+	</script>
+	<script>
+	var AppR = {
+		checkbox: document.getElementById('checkNewRemoval'),
+   		removalForm: document.getElementById('removalForm'),
+   		removalsList: document.getElementById('removalsList'),
+   		isNewRemoval: document.getElementById('isNewRemoval'),
+   		removalId: document.getElementById('removalId'),
+   		selectRemoval: document.getElementById('selectRemoval'),
+
+		newRemoval: function() {
+			var name = document.createElement('input');
+			name.id = 'reason'
+			name.name = 'reason'
+			name.type = 'text';
+			name.value = 'Enter removal name';
+			this.removalForm.appendChild(name);
+		},
+
+		toggleRemovalForm: function() {
+			if(this.removalForm.style.display == 'block') {
+				this.removalForm.style.display = 'none';
+				this.removalsList.style.display = 'block';
+				this.isNewRemoval.value = '0';
+			} else {
+				this.removalForm.style.display = 'block';
+				this.removalsList.style.display = 'none';
+				this.isNewRemoval.value = '1';
+			}
+		},
+
+		onSelectChanged: function() {
+			this.removalId.value = this.selectRemoval.options[this.selectRemoval.options.selectedIndex].id.substr(2);
+		},
+	};
+
+	AppR.newRemoval();
+	AppR.onSelectChanged();
+	
+	AppR.checkbox.addEventListener('click', function(){
+		AppR.toggleRemovalForm();
+	});
+
+	AppR.selectRemoval.onchange = function(){
+		AppR.onSelectChanged();
+	};
+	</script>
+</body>
+</html>

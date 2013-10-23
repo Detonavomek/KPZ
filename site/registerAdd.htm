@@ -1,0 +1,46 @@
+<html>
+<head>
+</head>
+<body>
+<form> <input type="checkbox" id="checkNewUser">New user?</input> </form>
+<div id="usersList">
+<select id='selectUsers'>{% for people in peoples %}
+	<option id = 'id{{people.people_id|e}}'>{{people.surname|e}} {{people.name|e}}</option>{% endfor %}
+</select>
+</div>
+<div id="userForm" style="display: none">
+<input id='name' type='text' value='Enter name' />
+<input id='surname' type='text' value='Enter surname' />
+<input id='age' type='number' value='20' min='3' max='150'/>
+</div>
+<script>
+	var App = {
+		checkbox: document.getElementById('checkNewUser'),
+   		userForm: document.getElementById('userForm'),
+   		usersList: document.getElementById('usersList'),
+   		comboBox: document.getElementById('selectUsers'),
+
+		selectUser: function() {
+			this.usersList.appendChild(this.comboBox);
+		},
+
+		toggleUserForm: function() {
+			if(this.userForm.style.display == 'block') {
+				this.userForm.style.display = 'none';
+				this.usersList.style.display = 'block';
+			} else {
+				this.userForm.style.display = 'block';
+				this.usersList.style.display = 'none';
+			}
+		},
+	};
+
+	App.selectUser();
+	
+	App.checkbox.addEventListener('click', function(){
+		App.toggleUserForm();
+	});
+
+	</script>
+</body>
+</html>
